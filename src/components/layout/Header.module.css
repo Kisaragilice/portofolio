@@ -1,0 +1,510 @@
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100;
+  padding-top: 0.8rem;
+  pointer-events: none;
+}
+
+/* Keep content from peeking through the gap above the floating bar. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: calc(var(--header-h) + 1.4rem);
+  background: linear-gradient(
+    to bottom,
+    var(--bg) 0%,
+    color-mix(in srgb, var(--bg) 72%, transparent) 62%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-x);
+  pointer-events: auto;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.6rem;
+  padding: 0.38rem 0.5rem 0.38rem 0.62rem;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(155deg, var(--panel-highlight), transparent 48%),
+    color-mix(in srgb, var(--panel) 78%, transparent);
+  backdrop-filter: var(--acrylic-lg);
+  transition:
+    background-color 500ms var(--ease-out),
+    box-shadow 500ms var(--ease-out),
+    border-color 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.scrolled .bar {
+  border-color: var(--border-strong);
+  background:
+    linear-gradient(155deg, var(--panel-highlight), transparent 46%),
+    color-mix(in srgb, var(--panel) 88%, var(--bg));
+  box-shadow: var(--shadow-float);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.62rem;
+  justify-self: start;
+  min-width: 0;
+  padding: 0.18rem;
+  border-radius: var(--radius-sm);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 2.05rem;
+  height: 2.05rem;
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 0.62rem;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 88%, transparent) 0%,
+      color-mix(in srgb, var(--accent-2) 70%, transparent) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 20px -10px var(--accent);
+  color: var(--accent-contrast);
+  font-family: var(--font-display-stack);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.markGlyph {
+  width: 1.02rem;
+  height: 1.02rem;
+  background: currentColor;
+  -webkit-mask: url("/assets/logo-mark.svg") center / contain no-repeat;
+  mask: url("/assets/logo-mark.svg") center / contain no-repeat;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.wordmark {
+  overflow: hidden;
+  font-family: var(--font-display-stack);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.host {
+  font-family: var(--font-mono-stack);
+  font-size: 0.55rem;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.desktopNav {
+  justify-self: center;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 0.12rem;
+  padding: 0.16rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel-inset) 62%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono-stack);
+  font-size: 0.61rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition:
+    background-color 380ms var(--ease-out),
+    color 380ms var(--ease-out),
+    transform 380ms var(--ease-out);
+}
+
+.navLink:hover {
+  background: var(--panel-inset);
+  color: var(--text-primary);
+}
+
+.activeDot {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 380ms var(--ease-out),
+    transform 380ms var(--ease-out);
+}
+
+.navLink.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.navLink.active .activeDot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.45rem;
+}
+
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding-inline: 0.55rem 0.35rem;
+  line-height: 1.15;
+}
+
+.clockValue {
+  font-family: var(--font-mono-stack);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.clockLabel {
+  font-family: var(--font-mono-stack);
+  font-size: 0.48rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.menuButton {
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.45rem;
+  padding-inline: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel-inset) 66%, transparent);
+  backdrop-filter: var(--acrylic-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-mono-stack);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    border-color 420ms var(--ease-out),
+    background-color 420ms var(--ease-out),
+    transform 420ms var(--ease-out);
+}
+
+.menuButton:hover {
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--panel-strong) 78%, transparent);
+  transform: translateY(-1px);
+}
+
+.menuLabel {
+  display: inline;
+}
+
+/* Mobile menu ------------------------------------------------------------ */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--header-h) + 1.1rem) var(--page-x) 1.25rem;
+  overflow-y: auto;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.75rem);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 650ms var(--ease-out),
+    visibility 0s linear 650ms;
+  outline: none;
+}
+
+.menuOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 650ms var(--ease-out),
+    visibility 0s;
+}
+
+.menuOpen .menuLink {
+  animation: menu-item-in 760ms var(--ease-out) both;
+}
+
+.menuOpen .menuList li:nth-child(2) .menuLink {
+  animation-delay: 70ms;
+}
+
+.menuOpen .menuList li:nth-child(3) .menuLink {
+  animation-delay: 140ms;
+}
+
+.menuOpen .menuList li:nth-child(4) .menuLink {
+  animation-delay: 210ms;
+}
+
+.menuOpen .menuList li:nth-child(5) .menuLink {
+  animation-delay: 280ms;
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuSheet.menuSheet {
+  align-self: flex-start;
+  width: min(100%, 33rem);
+  max-height: calc(100svh - var(--header-h) - 2.4rem);
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(155deg, var(--panel-highlight), transparent 42%),
+    var(--panel-solid);
+  backdrop-filter: var(--acrylic-sm);
+}
+
+.menuBar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.4rem;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bar);
+  font-family: var(--font-mono-stack);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.menuBarTitle {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuNav {
+  padding: 0.5rem;
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.menuLink {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.68rem 0.7rem;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.menuLink:hover,
+.menuLink:focus-visible {
+  background: var(--panel-inset);
+  color: var(--accent);
+}
+
+.menuIndex {
+  font-family: var(--font-mono-stack);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.menuLinkLabel {
+  font-family: var(--font-display-stack);
+  font-size: clamp(1.4rem, 6vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.menuArrow {
+  opacity: 0.45;
+  transform: translate(-0.15rem, 0.15rem);
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.menuLink:hover .menuArrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.menuFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.menuMeta {
+  font-family: var(--font-mono-stack);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.menuExternal {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  transition: color 200ms var(--ease-out);
+}
+
+.menuExternal:hover {
+  color: var(--accent);
+}
+
+.menuNow {
+  margin-top: 0.35rem;
+  max-width: 15rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1100px) {
+  .clock {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 3.4rem;
+  }
+
+  .desktopNav {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 961px) {
+  .menu {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  /* No live backdrop filter over scrolling content on phones. Use a nearly
+     opaque surface instead so the header stays readable and cheap. */
+  .bar {
+    background: color-mix(in srgb, var(--panel-solid) 94%, transparent);
+  }
+
+  .scrolled .bar {
+    background: var(--panel-solid);
+  }
+
+  .menu {
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+  }
+}
+
+@media (max-width: 520px) {
+  .host {
+    display: none;
+  }
+
+  .wordmark {
+    font-size: 0.8rem;
+  }
+
+  .menuLabel {
+    display: none;
+  }
+
+  .menuButton {
+    width: 2.45rem;
+    padding-inline: 0;
+    justify-content: center;
+  }
+
+  .menuFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .mark {
+    width: 1.95rem;
+    height: 1.95rem;
+  }
+}

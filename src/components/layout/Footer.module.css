@@ -1,0 +1,158 @@
+.footer {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0 1.35rem;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.15rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.65rem;
+  border-radius: var(--radius-lg);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  justify-self: start;
+  min-width: 0;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-display-stack);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.markGlyph {
+  width: 0.8rem;
+  height: 0.8rem;
+  background: currentColor;
+  -webkit-mask: url("/assets/logo-mark.svg") center / contain no-repeat;
+  mask: url("/assets/logo-mark.svg") center / contain no-repeat;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.name {
+  overflow: hidden;
+  font-family: var(--font-display-stack);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  font-family: var(--font-mono-stack);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.meta span {
+  padding-inline: 0.15rem;
+  color: var(--border-strong);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  justify-self: center;
+  font-family: var(--font-mono-stack);
+  font-size: 0.52rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.statusDot {
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 8px var(--accent-2);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.15rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.42rem 0.55rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono-stack);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.link:hover {
+  background: var(--panel-inset);
+  color: var(--accent);
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: 0.35rem;
+  font-family: var(--font-mono-stack);
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 760px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .status {
+    display: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+}

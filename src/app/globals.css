@@ -1,0 +1,793 @@
+/* ==========================================================================
+   Kisaragilice — Riced Workspace design system
+   Acrylic surfaces, ambient wallpaper, floating desktop-inspired layout.
+   Section layouts live in CSS modules beside each component.
+   ========================================================================== */
+
+:root {
+  /* Frosted Day — light */
+  --bg: #dedbd4;
+  --bg-elevated: #ece9e2;
+
+  --wall-1: #cbd8e8;
+  --wall-2: #e8d3b8;
+  --wall-3: #cdded3;
+  --wall-4: #e0d2c0;
+
+  --panel: rgba(255, 255, 255, 0.54);
+  --panel-strong: rgba(255, 255, 255, 0.8);
+  --panel-inset: rgba(255, 255, 255, 0.4);
+  --panel-solid: #f4f1ea;
+  --panel-bar: rgba(255, 255, 255, 0.34);
+  --panel-highlight: rgba(255, 255, 255, 0.76);
+
+  --text-primary: #26221c;
+  --text-secondary: #4f483e;
+  --text-muted: #5f584e;
+
+  --border: rgba(48, 40, 30, 0.14);
+  --border-strong: rgba(48, 40, 30, 0.23);
+
+  --accent: #3f5f9e;
+  --accent-strong: #2d4a82;
+  --accent-soft: rgba(63, 95, 158, 0.12);
+  --accent-contrast: #ffffff;
+  --accent-2: #3d7c74;
+  --warm: #8a6a44;
+
+  --dot-1: #c97878;
+  --dot-2: #bb9253;
+  --dot-3: #5f9c8b;
+
+  --shadow-panel:
+    0 26px 70px -32px rgba(29, 43, 60, 0.4),
+    0 2px 8px -4px rgba(29, 43, 60, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  --shadow-float: 0 30px 90px -36px rgba(29, 43, 60, 0.5);
+  --glow: 0 0 90px rgba(109, 147, 207, 0.14);
+
+  --grid-line: rgba(48, 40, 30, 0.05);
+  --noise-opacity: 0.025;
+  --panel-blur: 22px;
+  --glass-blur: 16px;
+  --glass-saturate: 155%;
+  --acrylic-panel: blur(22px) saturate(155%);
+  --acrylic-sm: blur(10px) saturate(145%);
+  --acrylic-md: blur(14px) saturate(150%);
+  --acrylic-lg: blur(28px) saturate(165%);
+  --acrylic-button: blur(18px) saturate(160%);
+  --veil-blur: 56px;
+
+  /* Type */
+  --font-display-stack: var(--font-display), "Space Grotesk", "Helvetica Neue",
+    Arial, sans-serif;
+  --font-body-stack: var(--font-body), "DM Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono-stack: var(--font-mono), "IBM Plex Mono", "SFMono-Regular",
+    Consolas, monospace;
+
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.05rem, 0.98rem + 0.3vw, 1.2rem);
+  --text-xl: clamp(1.35rem, 1.15rem + 0.8vw, 1.7rem);
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.25vw, 2.4rem);
+  --text-display: clamp(2.15rem, 1.7rem + 1.9vw, 3.4rem);
+  --text-hero: clamp(2.6rem, 2rem + 3.1vw, 4.6rem);
+
+  /* Space & layout */
+  --page-x: clamp(1rem, 3vw, 2.5rem);
+  --gutter: clamp(1rem, 1.5vw, 1.5rem);
+  --section-y: clamp(4.5rem, 8vw, 7.5rem);
+  --header-h: 4.75rem;
+  --max-width: 80rem;
+
+  --radius-xs: 0.55rem;
+  --radius-sm: 0.8rem;
+  --radius-md: 1.05rem;
+  --radius-lg: 1.4rem;
+  --radius-xl: 1.85rem;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --theme-duration: 1600ms;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* Midnight Acrylic — dark, primary art direction */
+  --bg: #070a0f;
+  --bg-elevated: #0c1118;
+
+  --wall-1: #0d2233;
+  --wall-2: #241a38;
+  --wall-3: #082a2a;
+  --wall-4: #101a33;
+
+  --panel: rgba(18, 25, 35, 0.62);
+  --panel-strong: rgba(25, 34, 47, 0.82);
+  --panel-inset: rgba(255, 255, 255, 0.035);
+  --panel-solid: #111821;
+  --panel-bar: rgba(255, 255, 255, 0.028);
+  --panel-highlight: rgba(255, 255, 255, 0.07);
+
+  --text-primary: #e8eef7;
+  --text-secondary: #a9b6c8;
+  --text-muted: #8493a6;
+
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.17);
+
+  --accent: #8fb3ff;
+  --accent-strong: #b6ccff;
+  --accent-soft: rgba(143, 179, 255, 0.14);
+  --accent-contrast: #08101c;
+  --accent-2: #7fd6c2;
+  --warm: #e6b980;
+
+  --dot-1: #d97b8a;
+  --dot-2: #d8ad68;
+  --dot-3: #6bc3b0;
+
+  --shadow-panel:
+    0 34px 90px -36px rgba(0, 0, 0, 0.75),
+    0 2px 12px -6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-float: 0 40px 110px -36px rgba(0, 0, 0, 0.85);
+  --glow: 0 0 110px rgba(84, 126, 214, 0.2);
+
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --noise-opacity: 0.035;
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg);
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1.75rem);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-width: 18rem;
+  min-height: 100svh;
+  isolation: isolate;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body-stack);
+  font-size: var(--text-base);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+ul,
+ol {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display-stack);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid var(--bg);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 58%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Shared layout & type utilities
+   -------------------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-x);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  scroll-margin-top: 0;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.eyebrow,
+.mono {
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: fit-content;
+  padding: 0.34rem 0.7rem 0.34rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel-inset) 72%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+  font-family: var(--font-mono-stack);
+  font-size: 0.62rem;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-label__index {
+  display: grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding-inline: 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+}
+
+.section-label__line {
+  display: none;
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  margin-top: 1.4rem;
+  margin-bottom: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+.section-title {
+  margin-top: 0.85rem;
+  font-size: var(--text-display);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.section-lede {
+  max-width: 33rem;
+  justify-self: end;
+  color: var(--text-secondary);
+  font-size: var(--text-lg);
+  line-height: 1.65;
+}
+
+/* Split-text primitives */
+.split-line {
+  display: block;
+  overflow: clip;
+  padding-block: 0.04em;
+  margin-block: -0.04em;
+}
+
+.split-unit {
+  display: inline-block;
+}
+
+.split-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Acrylic material system
+   -------------------------------------------------------------------------- */
+
+.panel {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(
+      120% 100% at 8% 0%,
+      color-mix(in srgb, var(--panel-highlight) 85%, transparent) 0%,
+      transparent 48%
+    ),
+    linear-gradient(155deg, var(--panel-highlight), transparent 44%),
+    var(--panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: var(--acrylic-panel);
+}
+
+/* Opaque fallback where backdrop-filter is unsupported. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel {
+    background: var(--panel-solid);
+  }
+}
+
+.panel--solid {
+  background: var(--panel-strong);
+}
+
+.panel--flat {
+  box-shadow: none;
+}
+
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.4rem;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel-bar) 82%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+  font-family: var(--font-mono-stack);
+  font-size: 0.62rem;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.window-dots {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.window-dot {
+  width: 0.44rem;
+  height: 0.44rem;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.window-dot:nth-child(1) {
+  background: var(--dot-1);
+}
+
+.window-dot:nth-child(2) {
+  background: var(--dot-2);
+}
+
+.window-dot:nth-child(3) {
+  background: var(--dot-3);
+}
+
+.window-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-meta {
+  flex: 0 0 auto;
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.62rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel-inset) 68%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+  font-family: var(--font-mono-stack);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.chip::before {
+  content: "";
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* Buttons ----------------------------------------------------------------- */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.72rem 1.15rem;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid color-mix(in srgb, var(--text-primary) 9%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel-strong) 56%, transparent);
+  backdrop-filter: var(--acrylic-button);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--panel-highlight) 82%, transparent),
+    0 14px 34px -24px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono-stack);
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 420ms var(--ease-out),
+    border-color 420ms var(--ease-out),
+    color 360ms var(--ease-out),
+    box-shadow 420ms var(--ease-out),
+    transform 460ms var(--ease-out);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: -55% -30%;
+  z-index: -1;
+  background: linear-gradient(
+    110deg,
+    transparent 32%,
+    color-mix(in srgb, #ffffff 22%, transparent) 49%,
+    transparent 66%
+  );
+  transform: translateX(-125%) rotate(8deg);
+  transition: transform 1s var(--ease-out);
+}
+
+.btn:hover::before {
+  transform: translateX(125%) rotate(8deg);
+}
+
+.btn:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px) scale(1.012);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.988);
+}
+
+.btn--primary {
+  border-color: color-mix(in srgb, var(--accent-strong) 54%, transparent);
+  background: color-mix(in srgb, var(--accent) 80%, transparent);
+  color: var(--accent-contrast);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 30%, transparent),
+    0 16px 38px -18px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+.btn--primary:hover {
+  background: color-mix(in srgb, var(--accent-strong) 88%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 35%, transparent),
+    0 22px 48px -20px color-mix(in srgb, var(--accent) 90%, transparent);
+}
+
+.btn--ghost,
+.btn--glass {
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--panel-inset) 66%, transparent);
+  color: var(--text-primary);
+}
+
+.btn--ghost:hover,
+.btn--glass:hover {
+  background: color-mix(in srgb, var(--panel-strong) 76%, transparent);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.btn:disabled::before,
+.btn[aria-disabled="true"]::before {
+  display: none;
+}
+
+.btn__icon {
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, #ffffff 12%, transparent);
+  backdrop-filter: var(--acrylic-sm);
+}
+
+.btn--ghost .btn__icon,
+.btn--glass .btn__icon {
+  background: var(--panel-inset);
+}
+
+/* --------------------------------------------------------------------------
+   Skip link
+   -------------------------------------------------------------------------- */
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 300;
+  padding: 0.7rem 1.1rem;
+  border-radius: var(--radius-pill);
+  background: var(--text-primary);
+  color: var(--bg);
+  font-family: var(--font-mono-stack);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+  transition: transform 220ms var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Theme transition — driven by GSAP, interpolated by the browser
+   -------------------------------------------------------------------------- */
+
+.theme-veil {
+  position: fixed;
+  inset: -20vmax;
+  z-index: 130;
+  pointer-events: none;
+  display: none;
+  opacity: 0;
+  background:
+    radial-gradient(
+      circle at var(--veil-x, 50%) var(--veil-y, 30%),
+      color-mix(in srgb, var(--accent) 86%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 36%, transparent) 28%,
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 76% 78%,
+      color-mix(in srgb, var(--accent-2) 24%, transparent) 0%,
+      transparent 46%
+    );
+  filter: blur(var(--veil-blur));
+  transform-origin: var(--veil-x, 50%) var(--veil-y, 30%);
+  will-change: auto;
+}
+
+html.is-theme-transitioning .theme-veil {
+  display: block;
+  will-change: opacity, transform;
+}
+
+html.is-theme-transitioning,
+html.is-theme-transitioning *,
+html.is-theme-transitioning *::before,
+html.is-theme-transitioning *::after {
+  transition-property: background-color, border-color, color, fill, stroke,
+    box-shadow, text-decoration-color, outline-color;
+  transition-duration: var(--theme-duration);
+  transition-timing-function: var(--ease-in-out);
+  transition-delay: 0s;
+}
+
+/* --------------------------------------------------------------------------
+   Lenis
+   -------------------------------------------------------------------------- */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 820px) {
+  .section-head {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .section-lede {
+    justify-self: start;
+  }
+}
+
+/* Phones get the same motion language, but not the desktop acrylic stack.
+   Nested backdrop filters are the expensive part on mobile GPUs, so keep only
+   the floating header frosted and let every inner surface stay translucent. */
+@media (max-width: 900px) {
+  :root {
+    --panel-blur: 0px;
+    --glass-blur: 0px;
+    --glass-saturate: 100%;
+    --acrylic-panel: none;
+    --acrylic-sm: none;
+    --acrylic-md: none;
+    --acrylic-button: none;
+    --acrylic-lg: none;
+    --veil-blur: 10px;
+    --shadow-panel:
+      0 16px 38px -28px rgba(29, 43, 60, 0.32),
+      0 1px 4px -3px rgba(29, 43, 60, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --shadow-float: 0 20px 48px -30px rgba(29, 43, 60, 0.4);
+  }
+
+  :root[data-theme="dark"] {
+    --shadow-panel:
+      0 20px 52px -30px rgba(0, 0, 0, 0.7),
+      0 1px 6px -4px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --shadow-float: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+  }
+
+  .btn::before {
+    display: none;
+  }
+
+  .theme-veil {
+    filter: none;
+  }
+
+  /* Keep the slow crossfade, but stop animating large shadows and outlines
+     across the whole document on phones. */
+  html.is-theme-transitioning,
+  html.is-theme-transitioning *,
+  html.is-theme-transitioning *::before,
+  html.is-theme-transitioning *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --section-y: clamp(3.5rem, 12vw, 4.75rem);
+  }
+
+  .section-head {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

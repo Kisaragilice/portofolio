@@ -1,0 +1,189 @@
+  "revision": "2.0",
+  "project": "Kisaragilice Portfolio — Arch Ricing Inspired UI/UX Redesign",
+  "design_intent": {
+    "core_concept": "A personal developer portfolio that feels like a beautifully riced Arch Linux / Hyprland desktop environment, translated into a web experience.",
+    "important_distinction": "This is NOT a Hyprland product website, Linux distro website, terminal emulator, or literal desktop clone. Borrow the visual language of modern Linux ricing: acrylic surfaces, floating panels, layered depth, restrained blur, subtle ambient light, compact system-style labels, and fluid interactions.",
+    "mood": ["modern", "technical", "calm", "immersive", "precise", "fluid", "personal"],
+    "avoid": ["corporate editorial portfolio", "oversized magazine typography as the dominant visual", "generic SaaS landing page", "literal desktop screenshot recreation", "excessive glassmorphism", "neon cyberpunk", "busy terminal cosplay"]
+  },
+  "redesign_scope": {
+    "instruction": "Treat the current screenshot and existing UI as a direction to replace, not a design to preserve. Rework the visual system, layout, navigation, section compositions, and motion language while retaining valid content, working links, and useful existing functionality.",
+    "preserve": ["real personal content", "working project links", "working theme preference if already implemented", "valid routes and useful interactions"],
+    "replace": ["current oversized editorial hero composition", "large plain typography-led layout", "current geometric orbit decoration if it does not fit the new art direction", "conventional navigation and card styling"]
+  },
+  "visual_language": {
+    "surfaces": {
+      "style": "Layered translucent acrylic with selective solid surfaces.",
+      "properties": ["backdrop blur", "semi-transparent fills", "fine low-contrast borders", "soft ambient shadows", "subtle inner highlights", "rounded corners with consistent radius scale"],
+      "rule": "Not every element should be glass. Use opaque or near-opaque surfaces behind important text to preserve readability."
+    },
+    "composition": [
+      "Floating top navigation inspired by a minimal Waybar, not a literal copy.",
+      "A calm atmospheric background with subtle gradient lighting and optional low-opacity grain.",
+      "Content arranged in layered panels and modular windows.",
+      "A clear visual hierarchy with generous spacing and controlled density.",
+      "Panels may overlap slightly to create depth, but never obscure content or controls.",
+      "Use small monospace metadata labels for section names, timestamps, categories, and technical details."
+    ],
+    "micro_details": [
+      "Subtle status indicators",
+      "Small section index labels",
+      "Fine separators",
+      "Soft focus and hover states",
+      "Small animated accent elements",
+      "Optional minimal system-inspired status strip"
+    ]
+  },
+  "themes": {
+    "light": {
+      "name": "Frosted Day",
+      "tokens": {
+        "background": "#E9E8E3",
+        "background_alt": "#E2E1DC",
+        "surface": "rgba(250, 249, 245, 0.66)",
+        "surface_strong": "rgba(250, 249, 245, 0.88)",
+        "surface_solid": "#F5F4F0",
+        "text": "#353A40",
+        "text_muted": "#747A80",
+        "border": "rgba(65, 70, 76, 0.14)",
+        "accent": "#8A7669",
+        "accent_secondary": "#8798A8"
+      }
+    },
+    "dark": {
+      "name": "Midnight Acrylic",
+      "tokens": {
+        "background": "#111318",
+        "background_alt": "#171B22",
+        "surface": "rgba(31, 36, 45, 0.62)",
+        "surface_strong": "rgba(31, 36, 45, 0.88)",
+        "surface_solid": "#1C2028",
+        "text": "#E5E7EB",
+        "text_muted": "#A2AAB6",
+        "border": "rgba(220, 228, 240, 0.12)",
+        "accent": "#A7B8D0",
+        "accent_secondary": "#B99A82"
+      }
+    },
+    "rules": [
+      "Use CSS custom properties for all theme tokens.",
+      "Keep text contrast accessible on translucent surfaces.",
+      "Use backdrop-filter blur with graceful fallback.",
+      "Do not make the entire page uniformly translucent.",
+      "Theme changes should animate background, surface, border, text, and accent colors together.",
+      "Use a subtle GSAP transition around 500–750ms with power2.inOut or similar.",
+      "Avoid white/black flash during initial hydration.",
+      "Persist manual selection and support system preference."
+    ]
+  },
+  "layout_and_sections": {
+    "navigation": {
+      "concept": "Floating acrylic control bar inspired by Waybar / desktop panels.",
+      "behavior": ["compact", "sticky or fixed with safe spacing", "active section indicator", "theme toggle", "mobile-friendly collapsed navigation"],
+      "visual": "Translucent blurred capsule or rounded panel with subtle border and shadow."
+    },
+    "hero": {
+      "concept": "A layered desktop-like workspace introduction, not a giant editorial title.",
+      "elements": [
+        "Name and role in a compact but expressive hierarchy",
+        "Short personal statement",
+        "A prominent floating profile/about panel",
+        "A few small technical-interest indicators",
+        "Clear actions to view projects and contact",
+        "Ambient background lighting"
+      ],
+      "motion": ["soft staggered entrance", "subtle floating depth", "pointer parallax only when appropriate", "gentle reveal of panels"]
+    },
+    "about": {
+      "concept": "Personal information arranged in a few connected acrylic panels.",
+      "elements": ["biography", "interests", "currently learning", "optional portrait or abstract visual"],
+      "motion": ["panel reveal", "subtle depth shift", "text reveal with restrained stagger"]
+    },
+    "toolkit": {
+      "concept": "A modular technical environment / component grid.",
+      "elements": ["languages", "frameworks", "operating systems", "tools"],
+      "motion": ["staggered grid entrance", "subtle hover elevation", "small icon or indicator animation"],
+      "rule": "Do not invent skill percentages or proficiency levels."
+    },
+    "projects": {
+      "concept": "Project windows floating in a layered workspace, with strong readable project summaries.",
+      "elements": ["project name", "description", "technology tags", "status", "repository link", "live demo when available"],
+      "motion": ["scroll-linked depth", "careful card overlap", "image reveal", "hover response"],
+      "rule": "Keep project cards easy to scan. Do not sacrifice usability for complex pinning."
+    },
+    "now": {
+      "concept": "A compact now-playing / current-focus style panel, but do not literally imitate a music player.",
+      "elements": ["current learning", "experiments", "interests"],
+      "motion": ["ambient indicator", "subtle content reveal"]
+    },
+    "contact": {
+      "concept": "A focused floating contact panel that feels like the final window in the workspace.",
+      "elements": ["short invitation", "email if supplied", "GitHub", "other supplied links"],
+      "motion": ["soft reveal", "restrained magnetic CTA"]
+    }
+  },
+  "motion": {
+    "stack": ["GSAP", "ScrollTrigger", "Lenis"],
+    "principles": [
+      "Fluid, smooth, and purposeful rather than constantly moving.",
+      "Use scroll-driven animation to create continuity between sections.",
+      "Keep the scroll behavior native-feeling; do not hijack the wheel.",
+      "Use transforms and opacity wherever possible.",
+      "Use blur animation sparingly because it can be expensive.",
+      "Use pinned sections only if they improve the story.",
+      "Avoid excessive parallax and floating motion that causes distraction."
+    ],
+    "theme_transition": "A coordinated GSAP timeline that interpolates CSS theme variables and important surfaces without remounting the application.",
+    "required": [
+      "Correct Lenis and ScrollTrigger synchronization",
+      "GSAP context cleanup in React",
+      "No duplicate ScrollTriggers in Strict Mode",
+      "Responsive motion variants",
+      "prefers-reduced-motion support",
+      "No content hidden permanently if animation fails"
+    ]
+  },
+  "technical_constraints": {
+    "preferred_stack": ["Next.js if compatible with the existing repository", "React", "TypeScript", "Tailwind CSS or CSS Modules", "GSAP", "ScrollTrigger", "Lenis"],
+    "instruction": "Inspect the existing repository before changing dependencies or architecture. Do not rewrite the application framework without a compelling technical reason.",
+    "performance": [
+      "Use backdrop-filter selectively and provide fallback colors.",
+      "Avoid large blurred layers covering the entire viewport on low-powered devices.",
+      "Use will-change only on elements that are actively animated.",
+      "Optimize images and reserve aspect ratios.",
+      "Reduce or disable expensive motion on mobile and reduced-motion settings."
+    ],
+    "accessibility": [
+      "Maintain sufficient contrast on glass surfaces.",
+      "All controls must be keyboard accessible.",
+      "Use semantic landmarks and heading hierarchy.",
+      "Respect prefers-reduced-motion.",
+      "Do not rely on blur or color alone to communicate information."
+    ]
+  },
+  "acceptance_criteria": [
+    "The result no longer resembles the current cream editorial portfolio screenshot.",
+    "The overall visual language clearly evokes modern Arch Linux desktop ricing without copying a literal desktop or Hyprland website.",
+    "Acrylic and translucent surfaces are visible but restrained and readable.",
+    "Navigation feels like a floating desktop panel.",
+    "Sections use layered modular compositions instead of one oversized editorial typography layout.",
+    "Light and dark themes both look intentionally designed.",
+    "Theme switching is fluid and coordinated.",
+    "Scroll animations feel connected and remain usable in both directions.",
+    "Mobile and reduced-motion experiences remain functional.",
+    "Existing valid content and project links are preserved.",
+    "Production build, lint, and type checks pass."
+  ],
+  "agent_workflow": [
+    "Inspect the current implementation and screenshot.",
+    "Read this redesign brief and the existing portfolio content JSON.",
+    "Summarize what will be preserved and what will be redesigned.",
+    "Propose a new page composition before implementation.",
+    "Implement the new visual system and theme tokens.",
+    "Rebuild navigation and hero first, then the remaining sections.",
+    "Integrate and validate GSAP and Lenis.",
+    "Test desktop, tablet, mobile, reduced-motion, and both themes.",
+    "Run lint, type checks, and production build.",
+    "Report changed files and any remaining content placeholders."
+  ]
+}
