@@ -163,6 +163,12 @@ git pull
 docker compose up -d --build
 ```
 
+or
+
+```bash
+docker compose up -d --force-recreate
+```
+
 The build downloads the `next/font` files, so the Docker build needs network access. If the site sits behind a reverse proxy, point it at the host port from `APP_PORT`, not at the container directly.
 
 ### Vercel
