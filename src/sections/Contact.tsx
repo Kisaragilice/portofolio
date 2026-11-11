@@ -59,7 +59,7 @@ export function Contact() {
                 <span className="window-dot" />
                 <span className="window-dot" />
               </span>
-              <span className="window-title">~/contact — channels</span>
+              <span className="window-title">~/contact — pacman -Syu</span>
               <span className="window-meta">open</span>
             </div>
 
@@ -127,8 +127,8 @@ export function Contact() {
                 </ul>
 
                 <p className={styles.footnote}>
-                  Email, Discord, and Facebook are placeholder channels for now.
-                  GitHub is still the most reliable place to find me.
+                  Email is the most direct route. GitHub, Discord, and Facebook
+                  are also available above.
                 </p>
               </div>
             </div>

@@ -192,7 +192,7 @@ export function Hero() {
                 <span className="window-dot" />
               </span>
               <span className="window-title">
-                ~/kisaragilice — profile
+                ~/Putraakbaral — profile
               </span>
               <span className="window-meta">zsh</span>
             </div>
@@ -256,7 +256,7 @@ export function Hero() {
 
               <div className={styles.prompt} data-hero-item aria-hidden="true">
                 <span className={styles.promptSign}>$</span>
-                <span className={styles.promptCmd}>echo $FOCUS</span>
+                <span className={styles.promptCmd}>pacman -Syu </span>
                 <span className={styles.promptArrow}>→</span>
                 <span className={styles.promptOut}>{focusSummary}</span>
                 <span className={styles.caret} />

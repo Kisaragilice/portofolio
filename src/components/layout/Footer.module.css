@@ -37,9 +37,6 @@
   border-radius: var(--radius-xs);
   background: var(--accent-soft);
   color: var(--accent);
-  font-family: var(--font-display-stack);
-  font-size: 0.78rem;
-  font-weight: 600;
 }
 
 .markGlyph {

@@ -12,6 +12,11 @@ const lanOrigins = Object.values(os.networkInterfaces())
   .map((entry) => entry.address);
 
 const nextConfig: NextConfig = {
+  // The Docker builder sets BUILD_STANDALONE=1. Local `npm run build` keeps
+  // the default output so `npm run start` remains the normal Node workflow.
+  ...(process.env.BUILD_STANDALONE === "1"
+    ? { output: "standalone" as const }
+    : {}),
   reactStrictMode: true,
   poweredByHeader: false,
   allowedDevOrigins: ["127.0.0.1", ...lanOrigins],
