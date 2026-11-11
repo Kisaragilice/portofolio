@@ -77,12 +77,13 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     let tick: ((time: number) => void) | undefined;
 
     if (!mobile) {
-      /* A low lerp makes every wheel tick blend into the previous one instead
-         of snapping to a stop. The multiplier stays close to 1 so the page
-         still covers ground; the weight comes from the interpolation. */
+      /* Keep the weighted feel without a long tail: 0.07 lagged behind fast
+         wheel bursts, while 0.09 still blends consecutive ticks but settles
+         within roughly a dozen frames. The multiplier stays close to 1 so the
+         page covers the same ground per wheel notch. */
       lenis = new Lenis({
         autoRaf: false,
-        lerp: 0.07,
+        lerp: 0.09,
         smoothWheel: true,
         wheelMultiplier: 0.96,
         touchMultiplier: 1.05,

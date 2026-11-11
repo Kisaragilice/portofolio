@@ -47,6 +47,8 @@ export function Hero() {
     const reduced = prefersReducedMotion();
     const mobile = isMobileViewport();
 
+    const media = gsap.matchMedia();
+    const floatTweens: gsap.core.Tween[] = [];
     const context = gsap.context(() => {
       if (reduced) return;
 
@@ -102,57 +104,66 @@ export function Hero() {
 
       /* Continuous floating and scroll-linked parallax are desktop-only.
          Mobile keeps the staged entrance and the menu motion. */
-      const media = gsap.matchMedia();
-
       media.add("(min-width: 901px)", () => {
         const floatItems = section.querySelectorAll("[data-hero-float]");
         floatItems.forEach((item, index) => {
-          gsap.to(item, {
-            y: index % 2 === 0 ? -7 : 5,
-            duration: 6 + index * 1.4,
-            delay: 1.9 + index * 0.35,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
+          floatTweens.push(
+            gsap.to(item, {
+              y: index % 2 === 0 ? -7 : 5,
+              duration: 6 + index * 1.4,
+              delay: 1.9 + index * 0.35,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+            }),
+          );
         });
 
-        gsap.to(identityRef.current, {
-          yPercent: -5,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.55,
-          },
-        });
+        /* One scrub timeline drives all three depth layers instead of three
+           independent ScrollTriggers doing the same viewport maths. */
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          })
+          .to(identityRef.current, { yPercent: -5, ease: "none" }, 0)
+          .to(sideRef.current, { yPercent: 9, ease: "none" }, 0)
+          .to(dockRef.current, { yPercent: -12, ease: "none" }, 0);
 
-        gsap.to(sideRef.current, {
-          yPercent: 9,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.6,
-          },
-        });
-
-        gsap.to(dockRef.current, {
-          yPercent: -12,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.65,
-          },
-        });
+        return () => {
+          floatTweens.length = 0;
+        };
       });
     }, section);
 
-    return () => context.revert();
+    /* CSS loops and the desktop float tweens only matter while the hero is on
+       screen. This observer also runs on phones so their lightweight cursor,
+       waveform, and cue animations pause once the hero scrolls away. */
+    let heroObserver: IntersectionObserver | undefined;
+    if (!reduced) {
+      heroObserver = new IntersectionObserver(
+        ([entry]) => {
+          for (const tween of floatTweens) {
+            if (entry.isIntersecting) tween.play();
+            else tween.pause();
+          }
+          section.toggleAttribute("data-hero-offstage", !entry.isIntersecting);
+        },
+        { rootMargin: "10% 0px" },
+      );
+      heroObserver.observe(section);
+    }
+
+    return () => {
+      heroObserver?.disconnect();
+      section.removeAttribute("data-hero-offstage");
+      media.revert();
+      context.revert();
+    };
   }, []);
 
   const focusSummary = interests

@@ -26,9 +26,8 @@ export function Parallax({
     const element = ref.current;
     if (!element || prefersReducedMotion()) return;
 
+    const media = gsap.matchMedia();
     const context = gsap.context(() => {
-      const media = gsap.matchMedia();
-
       media.add("(min-width: 901px)", () => {
         gsap.fromTo(
           element,
@@ -47,7 +46,10 @@ export function Parallax({
       });
     }, element);
 
-    return () => context.revert();
+    return () => {
+      media.revert();
+      context.revert();
+    };
   }, [distance]);
 
   return (

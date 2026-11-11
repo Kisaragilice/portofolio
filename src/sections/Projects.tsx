@@ -8,7 +8,7 @@ import {
   prefersReducedMotion,
   useIsomorphicLayoutEffect,
 } from "@/lib/motion";
-import { observeRevealOnce } from "@/lib/reveal";
+import { observeRevealOnce, revealRootMargin } from "@/lib/reveal";
 import { portfolio } from "@/lib/portfolio";
 import { ProjectArt } from "@/components/ui/ProjectArt";
 import { Reveal } from "@/components/ui/Reveal";
@@ -28,50 +28,60 @@ export function Projects() {
     const cards = Array.from(
       section.querySelectorAll<HTMLElement>("[data-project-card]"),
     );
+    const mobile = isMobileViewport();
 
-    if (isMobileViewport()) {
-      const cleanups = cards.map((card, index) =>
-        observeRevealOnce(
-          card,
-          card,
-          { y: 20, autoAlpha: 0 },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 0.75,
-            delay: index * 0.04,
-            ease: "power4.out",
-          },
-        ),
-      );
+    /* Artwork loops are transform/opacity only, but there is no reason to keep
+       compositing three cards while they are outside the viewport. */
+    const artObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.toggleAttribute(
+            "data-art-offstage",
+            !entry.isIntersecting,
+          );
+        });
+      },
+      { rootMargin: "15% 0px" },
+    );
+    cards.forEach((card) => artObserver.observe(card));
 
-      return () => cleanups.forEach((cleanup) => cleanup());
+    const cleanupArt = () => {
+      artObserver.disconnect();
+      cards.forEach((card) => card.removeAttribute("data-art-offstage"));
+    };
+
+    const revealCleanups = cards.map((card, index) =>
+      observeRevealOnce(
+        card,
+        card,
+        {
+          y: mobile ? 20 : 54,
+          autoAlpha: 0,
+          ...(mobile ? {} : { scale: 0.982 }),
+        },
+        {
+          y: 0,
+          autoAlpha: 1,
+          ...(mobile ? {} : { scale: 1 }),
+          duration: mobile ? 0.75 : 1.3,
+          delay: index * (mobile ? 0.04 : 0.09),
+          ease: "power4.out",
+        },
+        revealRootMargin("top 86%"),
+      ),
+    );
+
+    if (mobile) {
+      return () => {
+        cleanupArt();
+        revealCleanups.forEach((cleanup) => cleanup());
+      };
     }
 
+    const media = gsap.matchMedia();
     const context = gsap.context(() => {
-      cards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          { y: 54, autoAlpha: 0, scale: 0.982 },
-          {
-            y: 0,
-            autoAlpha: 1,
-            scale: 1,
-            duration: 1.3,
-            delay: index * 0.09,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 86%",
-              once: true,
-            },
-          },
-        );
-      });
-
       /* The art crop is a nice desktop depth cue, but on phones the extra
          scrub-linked transforms cost more than they add. Reveal alone stays. */
-      const media = gsap.matchMedia();
       media.add("(min-width: 901px)", () => {
         cards.forEach((card) => {
           const art = card.querySelector<HTMLElement>("[data-project-art]");
@@ -95,7 +105,8 @@ export function Projects() {
       });
 
       /* Desktop pointer depth: a restrained 3D lean that makes the project
-         windows feel physical under the mouse. */
+         windows feel physical under the mouse. Pointer moves are coalesced to
+         one rect read per frame instead of one per raw pointer event. */
       media.add(
         "(min-width: 901px) and (hover: hover) and (pointer: fine)",
         () => {
@@ -116,15 +127,28 @@ export function Projects() {
               transformOrigin: "center center",
             });
 
-            const onMove = (event: PointerEvent) => {
+            let frame = 0;
+            let pointerX = 0;
+            let pointerY = 0;
+
+            const applyTilt = () => {
+              frame = 0;
               const rect = card.getBoundingClientRect();
-              const x = (event.clientX - rect.left) / rect.width - 0.5;
-              const y = (event.clientY - rect.top) / rect.height - 0.5;
+              const x = (pointerX - rect.left) / rect.width - 0.5;
+              const y = (pointerY - rect.top) / rect.height - 0.5;
               rotateY(x * 2.6);
               rotateX(y * -2.2);
             };
 
+            const onMove = (event: PointerEvent) => {
+              pointerX = event.clientX;
+              pointerY = event.clientY;
+              if (!frame) frame = requestAnimationFrame(applyTilt);
+            };
+
             const onLeave = () => {
+              if (frame) cancelAnimationFrame(frame);
+              frame = 0;
               rotateX(0);
               rotateY(0);
             };
@@ -132,6 +156,7 @@ export function Projects() {
             card.addEventListener("pointermove", onMove);
             card.addEventListener("pointerleave", onLeave);
             cleanups.push(() => {
+              if (frame) cancelAnimationFrame(frame);
               card.removeEventListener("pointermove", onMove);
               card.removeEventListener("pointerleave", onLeave);
             });
@@ -142,7 +167,12 @@ export function Projects() {
       );
     }, section);
 
-    return () => context.revert();
+    return () => {
+      cleanupArt();
+      revealCleanups.forEach((cleanup) => cleanup());
+      media.revert();
+      context.revert();
+    };
   }, []);
 
   return (

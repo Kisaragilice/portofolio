@@ -1,4 +1,7 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useEffect, useRef, type CSSProperties } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 import { portfolio } from "@/lib/portfolio";
 import { Parallax } from "@/components/ui/Parallax";
 import { Reveal } from "@/components/ui/Reveal";
@@ -9,9 +12,33 @@ import styles from "./Now.module.css";
 const { currentlyLearning, interests, sections } = portfolio;
 
 export function Now() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || prefersReducedMotion()) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        section.toggleAttribute("data-now-offstage", !entry.isIntersecting);
+      },
+      { rootMargin: "10% 0px" },
+    );
+
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      section.removeAttribute("data-now-offstage");
+    };
+  }, []);
+
   return (
     <section
       id="now"
+      ref={sectionRef}
       className={`section ${styles.now}`}
       aria-labelledby="now-title"
     >

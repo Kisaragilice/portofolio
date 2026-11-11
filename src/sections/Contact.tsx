@@ -9,7 +9,6 @@ import styles from "./Contact.module.css";
 const { sections, links } = portfolio;
 
 const contactLinks = [
-  ...socialLinks,
   ...(links.email
     ? [
         {
@@ -20,6 +19,7 @@ const contactLinks = [
         },
       ]
     : []),
+  ...socialLinks,
   ...(links.linkedin
     ? [
         {
@@ -127,8 +127,8 @@ export function Contact() {
                 </ul>
 
                 <p className={styles.footnote}>
-                  GitHub is the most reliable place to find me. Email and other
-                  channels will appear here when published.
+                  Email, Discord, and Facebook are placeholder channels for now.
+                  GitHub is still the most reliable place to find me.
                 </p>
               </div>
             </div>

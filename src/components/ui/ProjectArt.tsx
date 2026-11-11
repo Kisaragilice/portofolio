@@ -19,8 +19,10 @@ export function ProjectArt({ variant }: { variant: ProjectArtVariant }) {
           <span className={styles.orbitOuter} />
           <span className={styles.orbitInner} />
           <span className={styles.orbitCore} />
-          <span className={styles.orbitNode} />
-          <span className={styles.orbitNodeAlt} />
+          <span className={styles.orbitNodes}>
+            <span className={styles.orbitNode} />
+            <span className={styles.orbitNodeAlt} />
+          </span>
         </div>
       ) : null}
 
@@ -52,7 +54,10 @@ export function ProjectArt({ variant }: { variant: ProjectArtVariant }) {
             {Array.from({ length: 22 }, (_, index) => (
               <span
                 key={index}
-                style={{ height: `${16 + ((index * 29) % 70)}%` }}
+                style={{
+                  height: `${16 + ((index * 29) % 70)}%`,
+                  animationDelay: `${(index % 11) * -0.13}s`,
+                }}
               />
             ))}
           </div>

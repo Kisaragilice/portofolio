@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap } from "@/lib/gsap";
 import {
   isMobileViewport,
   prefersReducedMotion,
   useIsomorphicLayoutEffect,
 } from "@/lib/motion";
-import { observeRevealOnce } from "@/lib/reveal";
+import { observeRevealOnce, revealRootMargin } from "@/lib/reveal";
 
 export function SectionLabel({
   index,
@@ -22,34 +21,20 @@ export function SectionLabel({
     const element = ref.current;
     if (!element || prefersReducedMotion()) return;
 
-    if (isMobileViewport()) {
-      return observeRevealOnce(
-        element,
-        element,
-        { y: 10, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.65, ease: "power3.out" },
-      );
-    }
+    const mobile = isMobileViewport();
 
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        element,
-        { y: 18, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 1.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: element,
-            start: "top 92%",
-            once: true,
-          },
-        },
-      );
-    }, element);
-
-    return () => context.revert();
+    return observeRevealOnce(
+      element,
+      element,
+      { y: mobile ? 10 : 18, autoAlpha: 0 },
+      {
+        y: 0,
+        autoAlpha: 1,
+        duration: mobile ? 0.65 : 1.15,
+        ease: "power3.out",
+      },
+      revealRootMargin("top 92%"),
+    );
   }, []);
 
   return (

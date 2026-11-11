@@ -611,13 +611,13 @@
   }
 }
 
-@media (max-width: 900px) {
-  .nameCursor,
-  .caret,
-  .waveBar,
-  .scrollCue svg {
-    animation: none;
-  }
+/* Pause the decorative loops once the hero has scrolled away. The panels keep
+   their last frame, and the browser stops compositing the waveform. */
+.hero[data-hero-offstage] .nameCursor,
+.hero[data-hero-offstage] .caret,
+.hero[data-hero-offstage] .waveBar,
+.hero[data-hero-offstage] .scrollCue svg {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {

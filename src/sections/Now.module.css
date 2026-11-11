@@ -290,6 +290,15 @@
   color: var(--text-muted);
 }
 
+/* Keep the decorative meters idle while the section is out of view. They are
+   small, but dozens of simultaneous transform animations still make the
+   compositor do work during every scroll frame. */
+.now[data-now-offstage] .itemMark span,
+.now[data-now-offstage] .monitorBars span,
+.now[data-now-offstage] .wave span {
+  animation-play-state: paused;
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
@@ -303,12 +312,6 @@
 
   .activity {
     min-height: 0;
-  }
-
-  .itemMark span,
-  .monitorBars span,
-  .wave span {
-    animation: none;
   }
 }
 

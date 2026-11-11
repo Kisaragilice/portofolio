@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap } from "@/lib/gsap";
 import {
   isMobileViewport,
   prefersReducedMotion,
   useIsomorphicLayoutEffect,
 } from "@/lib/motion";
-import { observeRevealOnce } from "@/lib/reveal";
+import { observeRevealOnce, revealRootMargin } from "@/lib/reveal";
 import { SplitText } from "./SplitText";
 
 type RevealHeadingProps = {
@@ -46,43 +45,22 @@ export function RevealHeading({
     const units = Array.from(element.querySelectorAll("[data-split-unit]"));
     if (!units.length) return;
 
-    if (isMobileViewport()) {
-      return observeRevealOnce(
-        element,
-        units,
-        { yPercent: 108, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.85,
-          delay: delay * 0.5,
-          stagger: stagger * 0.5,
-          ease: "power4.out",
-        },
-      );
-    }
+    const mobile = isMobileViewport();
 
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        units,
-        { yPercent: 118, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1.35,
-          delay,
-          stagger,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: element,
-            start,
-            once: true,
-          },
-        },
-      );
-    }, element);
-
-    return () => context.revert();
+    return observeRevealOnce(
+      element,
+      units,
+      { yPercent: mobile ? 108 : 118, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: mobile ? 0.85 : 1.35,
+        delay: mobile ? delay * 0.5 : delay,
+        stagger: mobile ? stagger * 0.5 : stagger,
+        ease: "power4.out",
+      },
+      revealRootMargin(start),
+    );
   }, [delay, stagger, start]);
 
   return (

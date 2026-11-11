@@ -17,12 +17,12 @@ export function AmbientBackground() {
     const root = ref.current;
     if (!root || prefersReducedMotion()) return;
 
+    const media = gsap.matchMedia();
     const context = gsap.context(() => {
       const blobs = Array.from(
         root.querySelectorAll<HTMLElement>("[data-ambient-blob]"),
       );
       const grid = root.querySelector("[data-ambient-grid]");
-      const media = gsap.matchMedia();
 
       media.add("(min-width: 901px)", () => {
         blobs.forEach((blob, index) => {
@@ -56,7 +56,10 @@ export function AmbientBackground() {
          recomposited while the page scrolls. */
     }, root);
 
-    return () => context.revert();
+    return () => {
+      media.revert();
+      context.revert();
+    };
   }, []);
 
   return (

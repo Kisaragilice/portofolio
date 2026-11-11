@@ -107,7 +107,7 @@ export const portfolio: Portfolio = {
   },
   links: {
     github: "https://github.com/Kisaragilice",
-    email: null,
+    email: "hello@kisaragilice.dev",
     linkedin: null,
     website: null,
   },
@@ -253,7 +253,7 @@ export const portfolio: Portfolio = {
     contact: {
       title: "Say hello",
       intro:
-        "I am always glad to talk about software, Linux, self-hosting, or something you are building. GitHub is the most reliable way to reach me.",
+        "I am always glad to talk about software, Linux, self-hosting, or something you are building. Email is the most direct way to reach me; the other channels are listed below.",
       footerNote:
         "This site documents what I build, what I learn, and the directions I am exploring.",
     },
@@ -265,6 +265,18 @@ export const socialLinks: SocialLink[] = [
     label: "GitHub",
     href: portfolio.links.github,
     handle: "@Kisaragilice",
+    external: true,
+  },
+  {
+    label: "Discord",
+    href: "https://discord.com/users/000000000000000000",
+    handle: "@kisaragilice",
+    external: true,
+  },
+  {
+    label: "Facebook",
+    href: "https://facebook.com/kisaragilice",
+    handle: "Kisaragilice",
     external: true,
   },
 ];

@@ -51,11 +51,15 @@
   --panel-blur: 22px;
   --glass-blur: 16px;
   --glass-saturate: 155%;
-  --acrylic-panel: blur(22px) saturate(155%);
-  --acrylic-sm: blur(10px) saturate(145%);
-  --acrylic-md: blur(14px) saturate(150%);
-  --acrylic-lg: blur(28px) saturate(165%);
-  --acrylic-button: blur(18px) saturate(160%);
+  /* The layered gradients already read as frosted acrylic against the soft
+     wallpaper. Live backdrop blur here created a backdrop root on dozens of
+     panels, chips, and buttons, forcing the compositor to re-blur moving
+     content during every scroll frame. Keep the material, drop the repaint. */
+  --acrylic-panel: none;
+  --acrylic-sm: none;
+  --acrylic-md: none;
+  --acrylic-lg: none;
+  --acrylic-button: none;
   --veil-blur: 56px;
 
   /* Type */

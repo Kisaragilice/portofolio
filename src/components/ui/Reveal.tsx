@@ -14,7 +14,7 @@ import {
   prefersReducedMotion,
   useIsomorphicLayoutEffect,
 } from "@/lib/motion";
-import { observeRevealOnce } from "@/lib/reveal";
+import { observeRevealOnce, revealRootMargin } from "@/lib/reveal";
 
 type RevealProps = {
   children: ReactNode;
@@ -49,88 +49,86 @@ export function Reveal({
     if (!element || prefersReducedMotion()) return;
 
     const mobile = isMobileViewport();
-
-    if (mobile) {
-      return observeRevealOnce(
-        element,
-        element,
-        { y: Math.min(y, 18), autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.75,
-          delay: delay * 0.5,
-          ease: "power3.out",
-        },
-      );
-    }
-
     let ready = false;
     let cleanupTilt: (() => void) | undefined;
 
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        element,
-        { y, autoAlpha: 0, scale: 0.985 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          scale: 1,
-          duration: 1.25,
-          delay,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: element,
-            start,
-            once: true,
-          },
-          onComplete: () => {
-            ready = true;
-          },
+    const cleanupReveal = observeRevealOnce(
+      element,
+      element,
+      {
+        y: mobile ? Math.min(y, 18) : y,
+        autoAlpha: 0,
+        ...(mobile ? {} : { scale: 0.985 }),
+      },
+      {
+        y: 0,
+        autoAlpha: 1,
+        ...(mobile ? {} : { scale: 1 }),
+        duration: mobile ? 0.75 : 1.25,
+        delay: mobile ? delay * 0.5 : delay,
+        ease: "power3.out",
+        onComplete: () => {
+          ready = true;
         },
-      );
+      },
+      revealRootMargin(start),
+    );
 
-      if (tilt && canHover()) {
-        const rotateX = gsap.quickTo(element, "rotationX", {
-          duration: 0.75,
-          ease: "power3.out",
-        });
-        const rotateY = gsap.quickTo(element, "rotationY", {
-          duration: 0.75,
-          ease: "power3.out",
-        });
+    if (tilt && canHover()) {
+      const rotateX = gsap.quickTo(element, "rotationX", {
+        duration: 0.75,
+        ease: "power3.out",
+      });
+      const rotateY = gsap.quickTo(element, "rotationY", {
+        duration: 0.75,
+        ease: "power3.out",
+      });
 
-        gsap.set(element, {
-          transformPerspective: 1200,
-          transformOrigin: "center center",
-        });
+      gsap.set(element, {
+        transformPerspective: 1200,
+        transformOrigin: "center center",
+      });
 
-        const onMove = (event: PointerEvent) => {
-          if (!ready) return;
-          const rect = element.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          rotateY(x * 2);
-          rotateX(y * -1.6);
-        };
+      let frame = 0;
+      let pointerX = 0;
+      let pointerY = 0;
 
-        const onLeave = () => {
-          rotateX(0);
-          rotateY(0);
-        };
+      const applyTilt = () => {
+        frame = 0;
+        if (!ready) return;
+        const rect = element.getBoundingClientRect();
+        const x = (pointerX - rect.left) / rect.width - 0.5;
+        const y = (pointerY - rect.top) / rect.height - 0.5;
+        rotateY(x * 2);
+        rotateX(y * -1.6);
+      };
 
-        element.addEventListener("pointermove", onMove);
-        element.addEventListener("pointerleave", onLeave);
-        cleanupTilt = () => {
-          element.removeEventListener("pointermove", onMove);
-          element.removeEventListener("pointerleave", onLeave);
-        };
-      }
-    }, element);
+      const onMove = (event: PointerEvent) => {
+        if (!ready) return;
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (!frame) frame = requestAnimationFrame(applyTilt);
+      };
+
+      const onLeave = () => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0;
+        rotateX(0);
+        rotateY(0);
+      };
+
+      element.addEventListener("pointermove", onMove);
+      element.addEventListener("pointerleave", onLeave);
+      cleanupTilt = () => {
+        if (frame) cancelAnimationFrame(frame);
+        element.removeEventListener("pointermove", onMove);
+        element.removeEventListener("pointerleave", onLeave);
+      };
+    }
 
     return () => {
       cleanupTilt?.();
-      context.revert();
+      cleanupReveal();
     };
   }, [delay, start, tilt, y]);
 

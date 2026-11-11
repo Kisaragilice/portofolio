@@ -44,7 +44,6 @@
   position: absolute;
   display: block;
   border-radius: 50%;
-  filter: blur(70px);
   opacity: 0.5;
   will-change: transform;
 }
@@ -57,9 +56,10 @@
   max-width: 60rem;
   max-height: 60rem;
   background: radial-gradient(
-    circle,
+    closest-side,
     color-mix(in srgb, var(--accent) 34%, transparent) 0%,
-    transparent 68%
+    color-mix(in srgb, var(--accent) 18%, transparent) 50%,
+    transparent 100%
   );
 }
 
@@ -71,9 +71,10 @@
   max-width: 54rem;
   max-height: 54rem;
   background: radial-gradient(
-    circle,
+    closest-side,
     color-mix(in srgb, var(--accent-2) 26%, transparent) 0%,
-    transparent 68%
+    color-mix(in srgb, var(--accent-2) 13%, transparent) 52%,
+    transparent 100%
   );
   opacity: 0.42;
 }
@@ -86,9 +87,10 @@
   max-width: 62rem;
   max-height: 50rem;
   background: radial-gradient(
-    circle,
+    closest-side,
     color-mix(in srgb, var(--wall-2) 58%, transparent) 0%,
-    transparent 70%
+    color-mix(in srgb, var(--wall-2) 30%, transparent) 50%,
+    transparent 100%
   );
   opacity: 0.5;
 }
@@ -110,7 +112,6 @@
     black 10%,
     transparent 78%
   );
-  will-change: transform;
 }
 
 .vignette {
