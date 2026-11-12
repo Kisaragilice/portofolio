@@ -649,7 +649,9 @@ svg {
 
 .theme-veil {
   position: fixed;
-  inset: -20vmax;
+  /* 10vmax still clears the 56px blur and the ±3° rotation, while cutting
+     roughly a third of the layer's raster area. */
+  inset: -10vmax;
   z-index: 130;
   pointer-events: none;
   display: none;
@@ -676,15 +678,38 @@ html.is-theme-transitioning .theme-veil {
   will-change: opacity, transform;
 }
 
+/* Surface colours crossfade everywhere. Text, borders, and shadows only run
+   on the elements that define them, which keeps the same visual crossfade
+   without recalculating paint for every node in the document. */
 html.is-theme-transitioning,
 html.is-theme-transitioning *,
 html.is-theme-transitioning *::before,
 html.is-theme-transitioning *::after {
-  transition-property: background-color, border-color, color, fill, stroke,
-    box-shadow, text-decoration-color, outline-color;
+  transition-property: background-color;
   transition-duration: var(--theme-duration);
   transition-timing-function: var(--ease-in-out);
   transition-delay: 0s;
+}
+
+/* Cascade order is the priority order: a text node wins over a border, and a
+   border wins over a shadow. The overlapping set is tiny (chips, buttons, and
+   the monograms), so letting those few surfaces hand off under the veil is
+   cheaper than making every one of them interpolate three properties. */
+html.is-theme-transitioning [data-theme-shadow] {
+  transition-property: background-color, box-shadow;
+}
+
+html.is-theme-transitioning [data-theme-border] {
+  transition-property: background-color, border-color;
+}
+
+html.is-theme-transitioning [data-theme-color] {
+  transition-property: background-color, color;
+}
+
+html.is-theme-transitioning :focus-visible {
+  transition-property: background-color, color, border-color, box-shadow,
+    outline-color;
 }
 
 /* --------------------------------------------------------------------------
@@ -759,15 +784,6 @@ html.lenis body {
 
   .theme-veil {
     filter: none;
-  }
-
-  /* Keep the slow crossfade, but stop animating large shadows and outlines
-     across the whole document on phones. */
-  html.is-theme-transitioning,
-  html.is-theme-transitioning *,
-  html.is-theme-transitioning *::before,
-  html.is-theme-transitioning *::after {
-    transition-property: background-color, border-color, color, fill, stroke;
   }
 }
 

@@ -44,7 +44,7 @@ The site is served at <http://localhost:3000>. `npm run dev` first prints every 
 - **Floating waybar navigation.** A detached rounded bar with an active-section pill, local clock, theme switch, and a mobile command-sheet menu.
 - **Hero as a desktop.** A compact `~/kisaragilice — profile` window, side widgets for current focus and toolkit, a GitHub card, and a small workspace dock. The name is intentionally compact rather than a full-screen type poster.
 - **Section language.** About uses profile/interests windows, Toolkit is a package grid, Projects is a featured project window followed by a clean two-up case-study grid, Now is an activity monitor, and Contact is a terminal-like channel panel.
-- **Two art-directed themes.** Midnight Acrylic uses charcoal/blue-gray surfaces with muted blue and teal accents. Frosted Day uses muted gray, ivory, translucent white, and warm earthy washes. The theme toggle runs a slow GSAP light-leak veil over a 1600 ms token interpolation across the whole environment.
+- **Two art-directed themes.** Midnight Acrylic uses charcoal/blue-gray surfaces with muted blue and teal accents. Frosted Day uses muted gray, ivory, translucent white, and warm earthy washes. The theme toggle runs a slow GSAP light-leak veil over a 1600 ms crossfade; only the elements that own a surface, text colour, border, or shadow participate in the interpolation.
 - **Acrylic interaction layer.** Header, primary/secondary buttons, chips, labels, dock, menu controls, tags, and metadata strips use translucent gradients with backdrop blur. Content surfaces stay legible; the glass is the material, not a replacement for contrast.
 - **Arch Linux mark.** The header and footer render the Arch Linux logo as a monochrome mask, and the favicon uses the same mark on an Arch-blue tile.
 
@@ -106,7 +106,7 @@ docker-compose.yml     production service, port mapping, and health check
 - Theme is stored in `localStorage` under `kisaragilice-theme`.
 - An inline head script applies the stored theme or system preference before first paint, preventing a flash and avoiding provider remounts.
 - `ThemeProvider` reads the document's `data-theme` via `useSyncExternalStore`, so the DOM remains the source of truth.
-- Toggling runs a slow GSAP light-leak veil (about 2.6 s total) over a 1600 ms token interpolation, so surfaces, type, borders, and accents crossfade instead of switching. With `prefers-reduced-motion: reduce`, switching is instant.
+- Toggling runs a slow GSAP light-leak veil (about 2.6 s total) over a 1600 ms token crossfade, so surfaces, type, borders, and shadows crossfade instead of switching. The transition is interruptible: another click kills and replaces the running timeline, continues from the veil's current frame, and flips the pending target so rapid toggles always land on the right theme. With `prefers-reduced-motion: reduce`, switching is instant.
 - System dark preference is respected on first visit; an explicit user choice takes precedence afterwards.
 
 ## Motion architecture
@@ -120,7 +120,7 @@ docker-compose.yml     production service, port mapping, and health check
 - Section labels and the About heading now reveal like the other headings; the footer panel enters on its own reveal. Desktop panels also get a restrained pointer-driven 3D tilt.
 - Projects reveal with GSAP ScrollTrigger, use scrub-linked art parallax on desktop, and a pointer tilt on desktop cards. The orbit, grid, and signal artwork loops use transform/opacity-only animation and pause while a card is outside the viewport.
 - Mobile gets one-shot entrances, menu-item entrances, and the slow theme transition, but no scroll-scrubbed transforms, ambient loops, hero float, or word-by-word scrub. Reveals there use one-shot `IntersectionObserver` callbacks instead of ScrollTriggers.
-- Mobile optimization is deliberate: native scrolling, no Lenis, nested backdrop blur disabled below 900 px (header included), full-screen ambient layers removed, project-art blur dropped, theme veil hidden when idle, and an opacity-only theme veil. The small hero, Now, and project-art loops remain enabled but pause offscreen.
+- Mobile optimization is deliberate: native scrolling, no Lenis, nested backdrop blur disabled below 900 px (header included), full-screen ambient layers removed, project-art blur dropped, theme veil hidden when idle, and an opacity-only theme veil. Colour transitions are limited to text near the viewport, refreshed by an `IntersectionObserver` with one screen of scroll headroom. The small hero, Now, and project-art loops remain enabled but pause offscreen.
 - All effects clean up timelines, ScrollTriggers, observers, ticker callbacks, and listeners; setup is StrictMode-safe.
 - With `prefers-reduced-motion: reduce`: Lenis is not created, ambient drift, reveals, waves, parallax, and project-art loops are disabled, and all content remains visible.
 
